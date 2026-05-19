@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Economics of Autonomous Vehicles | Research</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Custom physics cursor -->
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <!-- Screen Wipe Transition -->
+  <div class="transition-wipe" id="transition-wipe"></div>
+
+  <!-- Ambient Liquid Glass Blobs -->
+  <div class="ambient-blob blob-1"></div>
+  <div class="ambient-blob blob-2"></div>
+  <div class="ambient-blob blob-3"></div>
+
+  <!-- Network Canvas Background -->
+  <canvas id="network-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Premium Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">AV Econ</h1>
+          <p class="brand-subtitle">Interactive Publication</p>
+        </div>
+      </div>
+      <ul class="nav-links" id="nav-menu">
+        <li><button class="nav-item is-active" data-route="home"><span class="nav-num">01.</span> Home</button></li>
+        <li><button class="nav-item" data-route="research-question"><span class="nav-num">02.</span> Research Question</button></li>
+        <li><button class="nav-item" data-route="market-structure"><span class="nav-num">03.</span> Market Structure</button></li>
+        <li><button class="nav-item" data-route="consumer-adoption"><span class="nav-num">04.</span> Consumer Adoption</button></li>
+        <li><button class="nav-item" data-route="labor-macro"><span class="nav-num">05.</span> Labor & Macroeconomics</button></li>
+        <li><button class="nav-item" data-route="investment"><span class="nav-num">06.</span> Investment & Speculation</button></li>
+        <li><button class="nav-item" data-route="policy"><span class="nav-num">07.</span> Policy & Regulation</button></li>
+        <li><button class="nav-item" data-route="equilibrium"><span class="nav-num">08.</span> Equilibrium Models</button></li>
+        <li><button class="nav-item" data-route="data-lab"><span class="nav-num">09.</span> Data Lab</button></li>
+        <li><button class="nav-item" data-route="sources"><span class="nav-num">10.</span> Sources</button></li>
+        <li><button class="nav-item" data-route="conclusion"><span class="nav-num">11.</span> Conclusion</button></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="footer-line"></div>
+        <p>Q3 2026 &copy; Research</p>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- 1. Home -->
+      <section class="page-section is-active" id="home">
+        <div class="hero">
+          <span class="hero-eyebrow">Executive Summary</span>
+          <h2 class="hero-title">The Economics of<br/>Autonomous Vehicles</h2>
+          <p class="hero-subtitle">From Consumer Good to Market Disruptor</p>
+          <div class="hero-actions mt-md">
+            <button class="btn-primary" onclick="document.querySelector('[data-route=\'research-question\']').click()">Begin Analysis &rarr;</button>
+          </div>
+        </div>
+        <div class="stats-grid stagger-group">
+          <div class="stat-card fade-up">
+            <h4 class="stat-label">Projected TAM</h4>
+            <div class="stat-value">$2.1T</div>
+            <p class="stat-desc">Global autonomous mobility market by 2035</p>
+          </div>
+          <div class="stat-card fade-up">
+            <h4 class="stat-label">Productivity Gain</h4>
+            <div class="stat-value">+1.4%</div>
+            <p class="stat-desc">Est. annual GDP contribution via recovered transit time</p>
+          </div>
+          <div class="stat-card fade-up">
+            <h4 class="stat-label">Labor Displacement</h4>
+            <div class="stat-value">3.2M</div>
+            <p class="stat-desc">Professional driving roles exposed to high automation</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Research Question -->
+      <section class="page-section" id="research-question">
+        <header class="section-header fade-up">
+          <span class="eyebrow">Section 02</span>
+          <h2>The Research Question</h2>
+        </header>
+        <div class="featured-card fade-up delay-1">
+          <h3 class="elegant-heading">"How is the development and adoption of autonomous vehicles reshaping market structures, pricing strategies, and investment patterns in the automotive sector, and what economic forces determine their eventual equilibrium in consumer markets?"</h3>
+        </div>
+        <div class="grid-2 stagger-group mt-xl">
+          <div class="card fade-up">
+             <div class="card-icon"><div class="icon-pulse"></div></div>
+             <h4>Microeconomic Forces</h4>
+             <p class="placeholder-text">Analysis of price elasticity, complementary goods, and early-adopter Veblen effects.</p>
+          </div>
+          <div class="card fade-up">
+             <div class="card-icon"><div class="icon-pulse"></div></div>
+             <h4>Macroeconomic Impact</h4>
+             <p class="placeholder-text">Evaluation of deep structural changes in capital allocation, labor markets, and aggregate productivity.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Market Structure -->
+      <section class="page-section" id="market-structure">
+        <header class="section-header fade-up">
+          <span class="eyebrow">Section 03</span>
+          <h2>Market Structure</h2>
+        </header>
+        <div class="grid-2 stagger-group">
+          <div class="card fade-up">
+            <div class="card-header">
+              <h4>Oligopolistic Competition</h4>
+              <span class="badge">Tech vs Legacy</span>
+            </div>
+            <p class="card-desc">Analyzing the barrier to entry and fixed-cost barriers reshaping the industry.</p>
+            <div class="chart-container mt-md">
+              <canvas id="chartMarketShare"></canvas>
+            </div>
+          </div>
+          <div class="card fade-up delay-1">
+            <div class="card-header">
+              <h4>Network Externalities</h4>
+              <span class="badge">Data Advantages</span>
+            </div>
+            <p class="card-desc">How autonomous miles driven create insurmountable data moats.</p>
+            <div class="css-placeholder-graph matrix-graph">
+              <div class="matrix-node n1"></div>
+              <div class="matrix-node n2"></div>
+              <div class="matrix-node n3"></div>
+              <div class="matrix-line"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Consumer Adoption -->
+      <section class="page-section" id="consumer-adoption">
+        <header class="section-header fade-up">
+          <span class="eyebrow">Section 04</span>
+          <h2>Consumer Adoption</h2>
+        </header>
+        <div class="card featured-card fade-up">
+          <div class="card-header">
+            <h4>S-Curve Adoption Dynamics</h4>
+            <div class="control-panel-fake">
+              <span class="fake-toggle active">Base Case</span>
+              <span class="fake-toggle">Accelerated</span>
+            </div>
+          </div>
+          <p class="card-desc mb-md">Modeling the Bass Diffusion model for AV integration across consumer sets.</p>
+          <div class="chart-container large">
+             <canvas id="chartAdoption"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Labor & Macroeconomics -->
+      <section class="page-section" id="labor-macro">
+        <header class="section-header fade-up">
+          <span class="eyebrow">Section 05</span>
+          <h2>Labor & Macroeconomics</h2>
+        </header>
+        <div class="grid-2 stagger-group">
+          <div class="card fade-up">
+            <h4>Structural Unemployment Simulation</h4>
+            <p class="placeholder-text text-sm mb-md">Projected occupational shifts over a 15-year horizon.</p>
+            <div class="css-placeholder-graph heatmap-graph">
+              <div class="heat-cell h-high"></div><div class="heat-cell h-med"></div><div class="heat-cell h-low"></div>
+              <div class="heat-cell h-med"></div><div class="heat-cell h-high"></div><div class="heat-cell h-low"></div>
+            </div>
+          </div>
+          <div class="card fade-up delay-1">
+            <h4>Capital Deepening</h4>
+            <p class="placeholder-text text-sm mb-md">Shift from labor to capital-intensive transport.</p>
+            <div class="chart-container small">
+              <canvas id="chartCapital"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Investment & Speculation -->
+      <section class="page-section" id="investment">
+         <header class="section-header fade-up">
+          <span class="eyebrow">Section 06</span>
+          <h2>Investment & Speculation</h2>
+        </header>
+        <div class="card featured-card fade-up">
+           <div class="card-header">
+              <h4>Valuation Modeling: Speculative Premiums</h4>
+           </div>
+           <p class="card-desc mb-md">Comparing discounted cash flows to current market valuations for autonomous pure-plays.</p>
+           <div class="chart-container large">
+              <canvas id="chartInvestment"></canvas>
+           </div>
+        </div>
+      </section>
+
+      <!-- 7. Policy & Regulation -->
+      <section class="page-section" id="policy">
+        <header class="section-header fade-up">
+          <span class="eyebrow">Section 07</span>
+          <h2>Policy & Regulation</h2>
+        </header>
+        <div class="grid-3 stagger-group">
+          <div class="card fade-up policy-card">
+            <div class="policy-icon"><span>🛡️</span></div>
+            <h4>Safety Externalities</h4>
+            <p class="placeholder-text text-sm">Pigouvian subsidies modeling societal benefit of accident reduction.</p>
+          </div>
+          <div class="card fade-up delay-1 policy-card">
+            <div class="policy-icon"><span>🌍</span></div>
+            <h4>Emissions & Urban Layout</h4>
+            <p class="placeholder-text text-sm">Impact on municipal revenue (parking) and urban sprawl incentives (lower transport cost).</p>
+          </div>
+          <div class="card fade-up delay-2 policy-card">
+             <div class="policy-icon"><span>⚖️</span></div>
+             <h4>Antitrust & Monopoly</h4>
+             <p class="placeholder-text text-sm">Evaluating the risk of natural monopolies forming around fleet operating systems.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Equilibrium Models -->
+      <section class="page-section" id="equilibrium">
+        <header class="section-header fade-up">
+          <span class="eyebrow">Section 08</span>
+          <h2>Equilibrium Models</h2>
+        </header>
+        <div class="card featured-card fade-up dynamic-glow">
+          <div class="card-header">
+            <h4>General Equilibrium Synthesis</h4>
+          </div>
+          <p class="card-desc mb-md">A theoretical multi-market construct showing the end-state supply/demand intersection.</p>
+          <div class="css-placeholder-graph massive-3d">
+            <div class="grid-plane"></div>
+            <div class="intersect-point"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. Data Lab -->
+      <section class="page-section" id="data-lab">
+        <header class="section-header fade-up">
+          <span class="eyebrow">Section 09</span>
+          <h2>Data Lab</h2>
+        </header>
+        <div class="dashboard-grid stagger-group">
+          <div class="card controls-card fade-up">
+            <h4>Simulation Parameters</h4>
+            <div class="parameter-group mt-md">
+              <label>Price Elasticity of Demand</label>
+              <div class="fake-slider"><div class="slider-fill" style="width: 40%"></div></div>
+            </div>
+            <div class="parameter-group">
+              <label>Subsidization Rate</label>
+              <div class="fake-slider"><div class="slider-fill" style="width: 15%"></div></div>
+            </div>
+            <div class="parameter-group">
+              <label>Tech Depreciation</label>
+              <div class="fake-slider"><div class="slider-fill" style="width: 60%"></div></div>
+            </div>
+          </div>
+          <div class="card output-card fade-up delay-1">
+             <h4>Live Model Output</h4>
+             <div class="css-placeholder-graph scanning-grid">
+                <div class="scan-line"></div>
+                <div class="data-wave"></div>
+             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. Sources -->
+      <section class="page-section" id="sources">
+         <header class="section-header fade-up">
+          <span class="eyebrow">Section 10</span>
+          <h2>Sources & Methodology</h2>
+        </header>
+        <div class="card fade-up bibliography">
+           <ul class="source-list">
+             <li class="placeholder-text">McKinsey & Company. (2024). <em>Autonomous driving's future: Resolving the technology paradox</em>.</li>
+             <li class="placeholder-text">Bureau of Labor Statistics. (2025). <em>Projections of occupation shifts in the transport sector</em>.</li>
+             <li class="placeholder-text">Krugman, P. & Wells, R. (2023). <em>Microeconomics</em>. Academic Press.</li>
+           </ul>
+        </div>
+      </section>
+
+      <!-- 11. Conclusion -->
+      <section class="page-section" id="conclusion">
+        <div class="hero conclusion-hero fade-up">
+           <span class="hero-eyebrow">Synthesis</span>
+           <h2 class="hero-title">A Transformative<br/>Equilibrium</h2>
+           <p class="hero-description placeholder-text mt-md text-lg">
+             The autonomous vehicle presents an unprecedented economic puzzle: it is simultaneously a consumer durable, a capital asset, and an infrastructural node.
+           </p>
+           <div class="hero-actions mt-xl">
+              <button class="btn-secondary" onclick="document.querySelector('[data-route=\'home\']').click()">Return to Start</button>
+           </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
