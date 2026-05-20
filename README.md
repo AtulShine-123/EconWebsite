@@ -1,22 +1,28 @@
-# Autonomous Vehicles Economic Equilibrium SPA
+# AV Economics Intelligence Platform
 
-A single-page, white-and-blue themed experience that answers the AV market equilibrium research question using animated charts, interactive routing, and a live network canvas.
+A static, premium economics research interface for **The Economics of Autonomous Vehicles: From Consumer Good to Market Disruptor**.
 
-## Features
-- SPA tab routing with an ice-blue "warp streak" transition
-- HTML5 canvas network background reacting to cursor movement
-- Physics-based cursor ring highlight
-- Animated Chart.js visualizations for supply/demand, adoption, and labor/productivity
+The site is built as a single-page HTML/CSS/JS experience with:
 
-## Quick Start
+- 11 animated research sections
+- Multimedia-inspired page transitions, cursor motion, HUD labels, and canvas network background
+- Chart.js visual placeholders using concise research-backed data points
+- Bloomberg-lite Data Lab and equilibrium-model sections
+- Responsive layouts for desktop, tablet, and mobile
+
+## Run Locally
+
 ```bash
-npm install
 npm run dev
 ```
 
-Then open `http://localhost:5173` in a browser.
+Open `http://localhost:5173`.
 
-## Notes
-- Charts are illustrative and model-driven; update datasets in `app.js` to reflect new evidence.
-- Sources are listed in the footer of `index.html`.
+## Verify
 
+```bash
+npm run smoke
+node --check app.js
+```
+
+The project has no build step and no bundled JavaScript dependencies. Chart.js and fonts load from CDNs in `index.html`.

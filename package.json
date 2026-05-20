@@ -1,0 +1,17 @@
+{
+  "name": "av-econ-intelligence-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static premium economics research interface for autonomous vehicle market disruption.",
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "smoke": "node scripts/smoke.js"
+  },
+  "keywords": [
+    "economics",
+    "autonomous-vehicles",
+    "research",
+    "static-site"
+  ],
+  "license": "UNLICENSED"
+}

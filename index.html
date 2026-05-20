@@ -3,317 +3,548 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Economics of Autonomous Vehicles | Research</title>
+  <title>The Economics of Autonomous Vehicles | Intelligence Platform</title>
+  <meta name="description" content="A premium economics research interface studying autonomous vehicles as consumer goods, platforms, labor shocks, and market disruptors." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@200;300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260519e" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <!-- Custom physics cursor -->
-  <div class="cursor-dot" id="cursor-dot"></div>
-  <div class="cursor-ring" id="cursor-ring"></div>
+  <canvas id="network-canvas" aria-hidden="true"></canvas>
+  <div class="noise-layer" aria-hidden="true"></div>
+  <div class="scanline-layer" aria-hidden="true"></div>
+  <div class="transition-wipe" id="transition-wipe" aria-hidden="true">
+    <div class="wipe-line"></div>
+    <span class="wipe-label" id="wipe-label">MARKET SHIFT</span>
+  </div>
 
-  <!-- Screen Wipe Transition -->
-  <div class="transition-wipe" id="transition-wipe"></div>
+  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
 
-  <!-- Ambient Liquid Glass Blobs -->
-  <div class="ambient-blob blob-1"></div>
-  <div class="ambient-blob blob-2"></div>
-  <div class="ambient-blob blob-3"></div>
+  <div class="hud hud-left" aria-hidden="true">
+    <span>AV ECONOMICS TERMINAL</span>
+    <strong>RESEARCH BUILD 01</strong>
+  </div>
+  <div class="hud hud-right" aria-hidden="true">
+    <span>MARKET STATE</span>
+    <strong id="hud-route">HOME</strong>
+  </div>
 
-  <!-- Network Canvas Background -->
-  <canvas id="network-canvas"></canvas>
+  <aside class="context-dock liquid-glass" id="context-dock" aria-live="polite">
+    <div class="dock-topline">
+      <span class="mini-label">Meaning Layer</span>
+      <button class="dock-toggle hover-target" id="dock-toggle" type="button" aria-label="Collapse meaning layer">−</button>
+    </div>
+    <h2 id="dock-title">Home</h2>
+    <p id="dock-body">This opening frames AVs as more than vehicles: they become software, labor, policy, and platform shocks.</p>
+    <div class="dock-citations" id="dock-citations" aria-label="Active citations"></div>
+  </aside>
 
-  <div class="app-container">
-    <!-- Premium Sidebar Navigation -->
-    <nav class="sidebar">
-      <div class="brand">
-        <div class="brand-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
-        </div>
-        <div class="brand-text">
-          <h1 class="brand-title">AV Econ</h1>
-          <p class="brand-subtitle">Interactive Publication</p>
-        </div>
-      </div>
-      <ul class="nav-links" id="nav-menu">
-        <li><button class="nav-item is-active" data-route="home"><span class="nav-num">01.</span> Home</button></li>
-        <li><button class="nav-item" data-route="research-question"><span class="nav-num">02.</span> Research Question</button></li>
-        <li><button class="nav-item" data-route="market-structure"><span class="nav-num">03.</span> Market Structure</button></li>
-        <li><button class="nav-item" data-route="consumer-adoption"><span class="nav-num">04.</span> Consumer Adoption</button></li>
-        <li><button class="nav-item" data-route="labor-macro"><span class="nav-num">05.</span> Labor & Macroeconomics</button></li>
-        <li><button class="nav-item" data-route="investment"><span class="nav-num">06.</span> Investment & Speculation</button></li>
-        <li><button class="nav-item" data-route="policy"><span class="nav-num">07.</span> Policy & Regulation</button></li>
-        <li><button class="nav-item" data-route="equilibrium"><span class="nav-num">08.</span> Equilibrium Models</button></li>
-        <li><button class="nav-item" data-route="data-lab"><span class="nav-num">09.</span> Data Lab</button></li>
-        <li><button class="nav-item" data-route="sources"><span class="nav-num">10.</span> Sources</button></li>
-        <li><button class="nav-item" data-route="conclusion"><span class="nav-num">11.</span> Conclusion</button></li>
-      </ul>
+  <div class="detail-backdrop" id="detail-backdrop" aria-hidden="true"></div>
+  <aside class="detail-drawer liquid-glass" id="detail-drawer" aria-hidden="true" aria-label="Graph details">
+    <div class="drawer-top">
+      <span class="mini-label">Graph Detail</span>
+      <button class="drawer-close hover-target" id="drawer-close" type="button" aria-label="Close graph details">×</button>
+    </div>
+    <h2 id="drawer-title">Graph Detail</h2>
+    <p id="drawer-summary">Click a chart to see what it means.</p>
+    <div class="drawer-section">
+      <strong>How to read it</strong>
+      <p id="drawer-reading"></p>
+    </div>
+    <div class="drawer-section">
+      <strong>Why it matters</strong>
+      <p id="drawer-meaning"></p>
+    </div>
+    <div class="drawer-section">
+      <strong>Linked evidence</strong>
+      <div class="drawer-links" id="drawer-links"></div>
+    </div>
+  </aside>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <a class="brand hover-target" href="#home" data-route-link="home" aria-label="Go to home">
+        <span class="brand-mark">
+          <span></span>
+        </span>
+        <span>
+          <strong>AV Econ</strong>
+          <small>Market Intelligence</small>
+        </span>
+      </a>
+
+      <nav class="nav-rail">
+        <button class="nav-item is-active hover-target" data-route="home" data-label="HOME"><span>01</span><strong>Home</strong></button>
+        <button class="nav-item hover-target" data-route="research-question" data-label="RESEARCH QUESTION"><span>02</span><strong>Research Question</strong></button>
+        <button class="nav-item hover-target" data-route="market-structure" data-label="MARKET STRUCTURE"><span>03</span><strong>Market Structure</strong></button>
+        <button class="nav-item hover-target" data-route="consumer-adoption" data-label="CONSUMER ADOPTION"><span>04</span><strong>Consumer Adoption</strong></button>
+        <button class="nav-item hover-target" data-route="labor-macro" data-label="LABOR AND MACRO"><span>05</span><strong>Labor & Macro</strong></button>
+        <button class="nav-item hover-target" data-route="investment" data-label="INVESTMENT"><span>06</span><strong>Investment</strong></button>
+        <button class="nav-item hover-target" data-route="policy" data-label="POLICY"><span>07</span><strong>Policy</strong></button>
+        <button class="nav-item hover-target" data-route="equilibrium" data-label="EQUILIBRIUM"><span>08</span><strong>Equilibrium</strong></button>
+        <button class="nav-item hover-target" data-route="data-lab" data-label="DATA LAB"><span>09</span><strong>Data Lab</strong></button>
+        <button class="nav-item hover-target" data-route="sources" data-label="SOURCES"><span>10</span><strong>Sources</strong></button>
+        <button class="nav-item hover-target" data-route="conclusion" data-label="CONCLUSION"><span>11</span><strong>Conclusion</strong></button>
+      </nav>
+
       <div class="sidebar-footer">
-        <div class="footer-line"></div>
-        <p>Q3 2026 &copy; Research</p>
+        <div>
+          <span class="mini-label">Core Thesis</span>
+          <p>AVs begin as high-end consumer goods, then mature into platform infrastructure.</p>
+        </div>
+        <div class="status-chip"><span></span> LIVE MODEL SHELL</div>
       </div>
-    </nav>
+    </aside>
 
-    <!-- Main Content Area -->
-    <main class="main-content">
+    <main class="page-stage" id="page-stage">
+      <section class="page-section is-active" id="home" data-page="Home">
+        <div class="hero-grid">
+          <div class="hero-copy reveal">
+            <span class="eyebrow">Executive Research Brief</span>
+            <h1 class="mega-title" id="scramble-title" data-value="The Economics of Autonomous Vehicles">The Economics of Autonomous Vehicles</h1>
+            <p class="hero-subtitle">From consumer good to market disruptor: a data-rich study of how autonomy shifts demand, supply, labor, capital, policy, and long-run equilibrium.</p>
+            <div class="hero-actions">
+              <button class="btn-primary hover-target" data-jump="research-question">Begin Analysis</button>
+              <button class="btn-secondary hover-target" data-jump="data-lab">Open Data Lab</button>
+            </div>
+          </div>
 
-      <!-- 1. Home -->
-      <section class="page-section is-active" id="home">
-        <div class="hero">
-          <span class="hero-eyebrow">Executive Summary</span>
-          <h2 class="hero-title">The Economics of<br/>Autonomous Vehicles</h2>
-          <p class="hero-subtitle">From Consumer Good to Market Disruptor</p>
-          <div class="hero-actions mt-md">
-            <button class="btn-primary" onclick="document.querySelector('[data-route=\'research-question\']').click()">Begin Analysis &rarr;</button>
+          <div class="hero-visual reveal delay-1">
+            <div class="orbital-system" aria-hidden="true">
+              <div class="orbit orbit-a"><span></span></div>
+              <div class="orbit orbit-b"><span></span></div>
+              <div class="orbit orbit-c"><span></span></div>
+              <div class="core-node">AV</div>
+            </div>
+            <div class="floating-card stat-a">
+              <span>2030 Market</span>
+              <strong>$214B</strong>
+              <small>Grand View forecast baseline</small>
+            </div>
+            <div class="floating-card stat-b">
+              <span>Trust Barrier</span>
+              <strong>66%</strong>
+              <small>U.S. drivers afraid to ride fully autonomous</small>
+            </div>
+            <div class="floating-card stat-c">
+              <span>Labor Exposure</span>
+              <strong>2.7M</strong>
+              <small>Driving roles facing automation pressure</small>
+            </div>
           </div>
         </div>
-        <div class="stats-grid stagger-group">
-          <div class="stat-card fade-up">
-            <h4 class="stat-label">Projected TAM</h4>
-            <div class="stat-value">$2.1T</div>
-            <p class="stat-desc">Global autonomous mobility market by 2035</p>
-          </div>
-          <div class="stat-card fade-up">
-            <h4 class="stat-label">Productivity Gain</h4>
-            <div class="stat-value">+1.4%</div>
-            <p class="stat-desc">Est. annual GDP contribution via recovered transit time</p>
-          </div>
-          <div class="stat-card fade-up">
-            <h4 class="stat-label">Labor Displacement</h4>
-            <div class="stat-value">3.2M</div>
-            <p class="stat-desc">Professional driving roles exposed to high automation</p>
-          </div>
+
+        <div class="metric-strip reveal delay-2">
+          <article class="metric-card">
+            <span>Supply Shift</span>
+            <strong>-58%</strong>
+            <p>Projected AV build cost compression, moving supply outward as sensors and computing scale.</p>
+          </article>
+          <article class="metric-card">
+            <span>Unit Forecast</span>
+            <strong>125.7K</strong>
+            <p>Projected global autonomous vehicle units by 2030, up from roughly 21.2K in 2023.</p>
+          </article>
+          <article class="metric-card">
+            <span>Growth Regime</span>
+            <strong>41%</strong>
+            <p>Referenced CAGR in market-size forecasts, signaling an unusually steep adoption phase.</p>
+          </article>
+          <article class="metric-card">
+            <span>GDP Upside</span>
+            <strong>$214B</strong>
+            <p>Potential U.S. GDP lift from safety, efficiency, productivity, and logistics gains.</p>
+          </article>
+        </div>
+
+        <div class="content-grid two-one reveal delay-3">
+          <article class="panel chart-panel liquid-glass interactive-chart" data-chart-key="home">
+            <div class="panel-header">
+              <div>
+                <span class="mini-label">Adoption Signal</span>
+                <h2>Forecast curve: niche luxury to mobility infrastructure</h2>
+              </div>
+              <span class="panel-badge">Phase 1 Chart</span>
+            </div>
+            <div class="chart-wrap large"><canvas id="chartHomeAdoption"></canvas></div>
+          </article>
+          <article class="panel thesis-panel">
+            <span class="mini-label">Why This Matters</span>
+            <h2>Autonomy changes the product category itself.</h2>
+            <p>As costs fall and trust improves, AVs stop behaving like ordinary vehicles. They become fleet assets, software platforms, data networks, and public-policy problems at the same time.</p>
+            <ul class="insight-list">
+              <li>Markets move from one-time ownership to subscriptions, robotaxis, and managed fleets.</li>
+              <li>Data scale creates moats that favor a few tech-auto partnerships.</li>
+              <li>Labor and insurance shocks become macroeconomic questions, not only industry questions.</li>
+            </ul>
+          </article>
         </div>
       </section>
 
-      <!-- 2. Research Question -->
-      <section class="page-section" id="research-question">
-        <header class="section-header fade-up">
+      <section class="page-section" id="research-question" data-page="Research Question">
+        <header class="page-header reveal">
           <span class="eyebrow">Section 02</span>
-          <h2>The Research Question</h2>
+          <h2>Research Question</h2>
+          <p>What economic forces determine the equilibrium path as AVs move from premium consumer technology to platform-based transportation infrastructure?</p>
         </header>
-        <div class="featured-card fade-up delay-1">
-          <h3 class="elegant-heading">"How is the development and adoption of autonomous vehicles reshaping market structures, pricing strategies, and investment patterns in the automotive sector, and what economic forces determine their eventual equilibrium in consumer markets?"</h3>
+
+        <article class="question-card reveal delay-1">
+          <span class="mini-label">Core Question</span>
+          <h3>How will autonomous vehicles reshape pricing, market structure, labor allocation, investment behavior, and long-run equilibrium in consumer and mobility markets?</h3>
+        </article>
+
+        <div class="content-grid four reveal delay-2">
+          <article class="panel compact"><span class="mini-label">Demand</span><h3>Trust and Elasticity</h3><p>Model adoption as consumers balance convenience, perceived safety, price, and legal uncertainty.</p></article>
+          <article class="panel compact"><span class="mini-label">Supply</span><h3>Cost Compression</h3><p>Study how falling hardware and compute costs shift supply outward and reduce equilibrium prices.</p></article>
+          <article class="panel compact"><span class="mini-label">Structure</span><h3>Platform Oligopoly</h3><p>Analyze data moats, fleet networks, partnerships, and barriers to entry.</p></article>
+          <article class="panel compact"><span class="mini-label">Macro</span><h3>Labor and GDP</h3><p>Connect driver displacement, logistics productivity, safety, and capital allocation.</p></article>
         </div>
-        <div class="grid-2 stagger-group mt-xl">
-          <div class="card fade-up">
-             <div class="card-icon"><div class="icon-pulse"></div></div>
-             <h4>Microeconomic Forces</h4>
-             <p class="placeholder-text">Analysis of price elasticity, complementary goods, and early-adopter Veblen effects.</p>
-          </div>
-          <div class="card fade-up">
-             <div class="card-icon"><div class="icon-pulse"></div></div>
-             <h4>Macroeconomic Impact</h4>
-             <p class="placeholder-text">Evaluation of deep structural changes in capital allocation, labor markets, and aggregate productivity.</p>
-          </div>
+
+        <div class="content-grid two reveal delay-3">
+          <article class="panel">
+            <div class="panel-header">
+              <div><span class="mini-label">Method</span><h3>Research Roadmap</h3></div>
+            </div>
+            <div class="timeline">
+              <div><span>01</span><strong>Define market shock</strong><p>AVs shift from durable goods to mobility platforms.</p></div>
+              <div><span>02</span><strong>Map evidence</strong><p>Use forecasts, consumer surveys, labor data, and industry reports.</p></div>
+              <div><span>03</span><strong>Model equilibrium</strong><p>Show supply/demand movements, surplus changes, and scenario outcomes.</p></div>
+              <div><span>04</span><strong>Synthesize policy</strong><p>Evaluate externalities, regulation, liability, and antitrust pressure.</p></div>
+            </div>
+          </article>
+          <article class="panel dark-card">
+            <span class="mini-label">Economic Concepts</span>
+            <div class="concept-grid">
+              <span>Price elasticity</span>
+              <span>Positive externalities</span>
+              <span>Network effects</span>
+              <span>Oligopoly</span>
+              <span>Capital deepening</span>
+              <span>Consumer surplus</span>
+              <span>Veblen effects</span>
+              <span>General equilibrium</span>
+            </div>
+          </article>
         </div>
       </section>
 
-      <!-- 3. Market Structure -->
-      <section class="page-section" id="market-structure">
-        <header class="section-header fade-up">
+      <section class="page-section" id="market-structure" data-page="Market Structure">
+        <header class="page-header reveal">
           <span class="eyebrow">Section 03</span>
           <h2>Market Structure</h2>
+          <p>AV competition is not a simple car-company race. It is a platform contest around data, AI, fleet deployment, regulation, and capital intensity.</p>
         </header>
-        <div class="grid-2 stagger-group">
-          <div class="card fade-up">
-            <div class="card-header">
-              <h4>Oligopolistic Competition</h4>
-              <span class="badge">Tech vs Legacy</span>
+
+        <div class="content-grid three reveal delay-1">
+          <article class="panel company-card"><span>Waymo</span><strong>Robotaxi Platform</strong><p>Autonomous miles, city permits, fleet learning, and Alphabet capital create a high-entry-barrier model.</p></article>
+          <article class="panel company-card"><span>Tesla</span><strong>Consumer Installed Base</strong><p>Software-led autonomy, EV scale, and optional FSD pricing turn vehicles into upgradeable assets.</p></article>
+          <article class="panel company-card"><span>Legacy Auto</span><strong>Scale and Manufacturing</strong><p>GM, Ford, VW, and partners bring production strength but face software and data disadvantages.</p></article>
+        </div>
+
+        <div class="content-grid two reveal delay-2">
+          <article class="panel chart-panel liquid-glass interactive-chart" data-chart-key="concentration">
+            <div class="panel-header"><div><span class="mini-label">Concentration</span><h3>Illustrative market-power index</h3></div><span class="panel-badge">Oligopoly</span></div>
+            <div class="chart-wrap"><canvas id="chartConcentration"></canvas></div>
+          </article>
+          <article class="panel">
+            <div class="panel-header"><div><span class="mini-label">Network Effects</span><h3>Data flywheel</h3></div></div>
+            <div class="flywheel">
+              <div class="fly-node">More miles</div>
+              <div class="fly-node">Better models</div>
+              <div class="fly-node">Safer rides</div>
+              <div class="fly-node">More permits</div>
+              <div class="fly-core">Data moat</div>
             </div>
-            <p class="card-desc">Analyzing the barrier to entry and fixed-cost barriers reshaping the industry.</p>
-            <div class="chart-container mt-md">
-              <canvas id="chartMarketShare"></canvas>
-            </div>
-          </div>
-          <div class="card fade-up delay-1">
-            <div class="card-header">
-              <h4>Network Externalities</h4>
-              <span class="badge">Data Advantages</span>
-            </div>
-            <p class="card-desc">How autonomous miles driven create insurmountable data moats.</p>
-            <div class="css-placeholder-graph matrix-graph">
-              <div class="matrix-node n1"></div>
-              <div class="matrix-node n2"></div>
-              <div class="matrix-node n3"></div>
-              <div class="matrix-line"></div>
-            </div>
-          </div>
+          </article>
+        </div>
+
+        <div class="content-grid four reveal delay-3">
+          <article class="panel compact"><span class="mini-label">Barrier</span><h3>R&D Fixed Costs</h3><p>High upfront spending keeps small entrants out.</p></article>
+          <article class="panel compact"><span class="mini-label">Barrier</span><h3>Regulatory Access</h3><p>City approvals create geographic gatekeeping.</p></article>
+          <article class="panel compact"><span class="mini-label">Advantage</span><h3>Fleet Scale</h3><p>More vehicles generate more usage data.</p></article>
+          <article class="panel compact"><span class="mini-label">Risk</span><h3>Natural Monopoly</h3><p>Network effects can push markets toward a few dominant operators.</p></article>
         </div>
       </section>
 
-      <!-- 4. Consumer Adoption -->
-      <section class="page-section" id="consumer-adoption">
-        <header class="section-header fade-up">
+      <section class="page-section" id="consumer-adoption" data-page="Consumer Adoption">
+        <header class="page-header reveal">
           <span class="eyebrow">Section 04</span>
           <h2>Consumer Adoption</h2>
+          <p>Demand is constrained less by imagination than by trust. Safety perception, status signaling, and price declines determine when the mass market arrives.</p>
         </header>
-        <div class="card featured-card fade-up">
-          <div class="card-header">
-            <h4>S-Curve Adoption Dynamics</h4>
-            <div class="control-panel-fake">
-              <span class="fake-toggle active">Base Case</span>
-              <span class="fake-toggle">Accelerated</span>
-            </div>
-          </div>
-          <p class="card-desc mb-md">Modeling the Bass Diffusion model for AV integration across consumer sets.</p>
-          <div class="chart-container large">
-             <canvas id="chartAdoption"></canvas>
-          </div>
+
+        <div class="content-grid two-one reveal delay-1">
+          <article class="panel chart-panel liquid-glass interactive-chart" data-chart-key="trust">
+            <div class="panel-header"><div><span class="mini-label">Trust Curve</span><h3>Safety perception versus willingness to ride</h3></div><span class="panel-badge">Survey Layer</span></div>
+            <div class="chart-wrap large"><canvas id="chartTrust"></canvas></div>
+          </article>
+          <article class="panel">
+            <span class="mini-label">Behavioral Frictions</span>
+            <h3>Adoption is a psychological market.</h3>
+            <ul class="insight-list">
+              <li>AAA reports 66% of U.S. drivers are afraid to ride in a fully self-driving car.</li>
+              <li>Pew reports only about 37% would ride in an AV, showing the trust gap.</li>
+              <li>Early adopters show status and convenience demand, but loss aversion appears when features are repriced.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="content-grid three reveal delay-2">
+          <article class="panel segment-card"><span>Premium Early Adopters</span><strong>Low elasticity</strong><p>High-income, tech-forward buyers value autonomy as innovation and status.</p></article>
+          <article class="panel segment-card"><span>Urban Service Users</span><strong>Usage based</strong><p>Robotaxis convert AV demand into per-ride convenience and lower ownership pressure.</p></article>
+          <article class="panel segment-card"><span>Mass Market Households</span><strong>Trust sensitive</strong><p>Require safety proof, lower prices, liability clarity, and practical use cases.</p></article>
+        </div>
+
+        <div class="timeline horizontal reveal delay-3">
+          <div><span>2023</span><strong>Niche pilots</strong><p>Limited cities and cautious public acceptance.</p></div>
+          <div><span>2030</span><strong>Robotaxi scale</strong><p>Expert timelines push large L4 deployments toward decade end.</p></div>
+          <div><span>2035</span><strong>L2+ mainstream</strong><p>Mass-market vehicles emphasize assisted autonomy before full L4 ownership.</p></div>
         </div>
       </section>
 
-      <!-- 5. Labor & Macroeconomics -->
-      <section class="page-section" id="labor-macro">
-        <header class="section-header fade-up">
+      <section class="page-section" id="labor-macro" data-page="Labor & Macroeconomics">
+        <header class="page-header reveal">
           <span class="eyebrow">Section 05</span>
           <h2>Labor & Macroeconomics</h2>
+          <p>The AV shock converts private transportation innovation into a labor-market, logistics, insurance, and productivity question.</p>
         </header>
-        <div class="grid-2 stagger-group">
-          <div class="card fade-up">
-            <h4>Structural Unemployment Simulation</h4>
-            <p class="placeholder-text text-sm mb-md">Projected occupational shifts over a 15-year horizon.</p>
-            <div class="css-placeholder-graph heatmap-graph">
-              <div class="heat-cell h-high"></div><div class="heat-cell h-med"></div><div class="heat-cell h-low"></div>
-              <div class="heat-cell h-med"></div><div class="heat-cell h-high"></div><div class="heat-cell h-low"></div>
+
+        <div class="content-grid three reveal delay-1">
+          <article class="metric-card large"><span>At-risk driving roles</span><strong>2.7M</strong><p>Heavy truckers plus taxi, shuttle, and chauffeur roles exposed to automation pressure.</p></article>
+          <article class="metric-card large"><span>Potential GDP lift</span><strong>$214B</strong><p>Safety, time recovery, traffic efficiency, and logistics gains can raise output.</p></article>
+          <article class="metric-card large"><span>Freight opportunity</span><strong>$600B</strong><p>Autonomous trucking market potential by 2035 in McKinsey-style scenarios.</p></article>
+        </div>
+
+        <div class="content-grid two reveal delay-2">
+          <article class="panel">
+            <div class="panel-header"><div><span class="mini-label">Labor Heatmap</span><h3>Exposure by occupation type</h3></div></div>
+            <div class="heatmap">
+              <span class="high">Truck freight</span>
+              <span class="high">Taxi and shuttle</span>
+              <span class="medium">Delivery</span>
+              <span class="medium">Insurance claims</span>
+              <span class="low">Fleet maintenance</span>
+              <span class="low">Remote operations</span>
+              <span class="medium">Auto repair</span>
+              <span class="low">Software support</span>
             </div>
-          </div>
-          <div class="card fade-up delay-1">
-            <h4>Capital Deepening</h4>
-            <p class="placeholder-text text-sm mb-md">Shift from labor to capital-intensive transport.</p>
-            <div class="chart-container small">
-              <canvas id="chartCapital"></canvas>
-            </div>
-          </div>
+          </article>
+          <article class="panel chart-panel liquid-glass interactive-chart" data-chart-key="labor">
+            <div class="panel-header"><div><span class="mini-label">Capital Deepening</span><h3>Labor demand versus autonomy capital</h3></div></div>
+            <div class="chart-wrap"><canvas id="chartLabor"></canvas></div>
+          </article>
+        </div>
+
+        <div class="content-grid two reveal delay-3">
+          <article class="panel chart-panel liquid-glass interactive-chart" data-chart-key="gdp"><div class="panel-header"><div><span class="mini-label">Macro Output</span><h3>GDP impact channels</h3></div><span class="panel-badge">Click for detail</span></div><div class="chart-wrap"><canvas id="chartGDP"></canvas></div></article>
+          <article class="panel"><span class="mini-label">Insurance Disruption</span><h3>Risk moves from driver behavior to product liability.</h3><p>As crashes decline and responsibility shifts toward software, insurers may face lower premiums, new liability structures, and pressure to price fleet-level technology risk.</p></article>
         </div>
       </section>
 
-      <!-- 6. Investment & Speculation -->
-      <section class="page-section" id="investment">
-         <header class="section-header fade-up">
+      <section class="page-section" id="investment" data-page="Investment & Speculation">
+        <header class="page-header reveal">
           <span class="eyebrow">Section 06</span>
           <h2>Investment & Speculation</h2>
+          <p>AV investing behaves like a long-duration option: huge upside if deployment scales, heavy losses if regulation, safety, or consumer trust delay the payoff.</p>
         </header>
-        <div class="card featured-card fade-up">
-           <div class="card-header">
-              <h4>Valuation Modeling: Speculative Premiums</h4>
-           </div>
-           <p class="card-desc mb-md">Comparing discounted cash flows to current market valuations for autonomous pure-plays.</p>
-           <div class="chart-container large">
-              <canvas id="chartInvestment"></canvas>
-           </div>
+
+        <div class="content-grid two-one reveal delay-1">
+          <article class="panel chart-panel liquid-glass interactive-chart" data-chart-key="investment">
+            <div class="panel-header"><div><span class="mini-label">Valuation Map</span><h3>Market belief in autonomy platforms</h3></div><span class="panel-badge">Bubble Risk</span></div>
+            <div class="chart-wrap large"><canvas id="chartInvestment"></canvas></div>
+          </article>
+          <article class="panel dark-card">
+            <span class="mini-label">Speculative Premium</span>
+            <h3>Investors price the future network, not only the current car.</h3>
+            <p>Waymo, Tesla, Cruise, Aurora, and other autonomy firms attract capital because they may control high-margin software, fleets, and logistics infrastructure.</p>
+          </article>
+        </div>
+
+        <article class="panel reveal delay-2">
+          <div class="panel-header"><div><span class="mini-label">Comparable Set</span><h3>Company valuation snapshot from research draft</h3></div></div>
+          <div class="data-table">
+            <div><span>Company</span><span>Category</span><span>Valuation / Cap</span><span>Interpretation</span></div>
+            <div><strong>Waymo</strong><span>AV platform</span><span>~$126B</span><span>Pure autonomy confidence</span></div>
+            <div><strong>Tesla</strong><span>EV and autonomy</span><span>~$1.5T</span><span>Software and scale premium</span></div>
+            <div><strong>GM</strong><span>Legacy auto</span><span>~$86B</span><span>Cruise optionality</span></div>
+            <div><strong>Ford</strong><span>Legacy auto</span><span>~$52B</span><span>Manufacturing value</span></div>
+            <div><strong>Volkswagen</strong><span>Legacy auto</span><span>~$20B</span><span>Lower autonomy premium</span></div>
+          </div>
+        </article>
+
+        <div class="timeline horizontal reveal delay-3">
+          <div><span>2021</span><strong>Funding spike</strong><p>Global AV startup funding peaks near $12.7B.</p></div>
+          <div><span>2022-23</span><strong>Reality check</strong><p>Deployment delays compress speculative valuations.</p></div>
+          <div><span>2024</span><strong>Capital returns</strong><p>Wayve and Cruise rounds show renewed appetite.</p></div>
         </div>
       </section>
 
-      <!-- 7. Policy & Regulation -->
-      <section class="page-section" id="policy">
-        <header class="section-header fade-up">
+      <section class="page-section" id="policy" data-page="Policy & Regulation">
+        <header class="page-header reveal">
           <span class="eyebrow">Section 07</span>
           <h2>Policy & Regulation</h2>
+          <p>AV policy determines whether positive externalities are captured and whether new platform power becomes socially costly.</p>
         </header>
-        <div class="grid-3 stagger-group">
-          <div class="card fade-up policy-card">
-            <div class="policy-icon"><span>🛡️</span></div>
-            <h4>Safety Externalities</h4>
-            <p class="placeholder-text text-sm">Pigouvian subsidies modeling societal benefit of accident reduction.</p>
-          </div>
-          <div class="card fade-up delay-1 policy-card">
-            <div class="policy-icon"><span>🌍</span></div>
-            <h4>Emissions & Urban Layout</h4>
-            <p class="placeholder-text text-sm">Impact on municipal revenue (parking) and urban sprawl incentives (lower transport cost).</p>
-          </div>
-          <div class="card fade-up delay-2 policy-card">
-             <div class="policy-icon"><span>⚖️</span></div>
-             <h4>Antitrust & Monopoly</h4>
-             <p class="placeholder-text text-sm">Evaluating the risk of natural monopolies forming around fleet operating systems.</p>
-          </div>
+
+        <div class="content-grid two reveal delay-1">
+          <article class="panel chart-panel liquid-glass interactive-chart" data-chart-key="policy">
+            <div class="panel-header"><div><span class="mini-label">Policy Matrix</span><h3>Impact by regulatory lever</h3></div></div>
+            <div class="chart-wrap"><canvas id="chartPolicy"></canvas></div>
+          </article>
+          <article class="panel supply-card">
+            <span class="mini-label">Supply-Demand Policy Panel</span>
+            <div class="sd-diagram" aria-label="Illustrative supply and demand diagram">
+              <span class="axis y"></span>
+              <span class="axis x"></span>
+              <span class="curve demand"></span>
+              <span class="curve supply old"></span>
+              <span class="curve supply new"></span>
+              <span class="point p1"></span>
+              <span class="point p2"></span>
+              <small class="label-one">Safety subsidy shifts demand</small>
+              <small class="label-two">Technology lowers supply cost</small>
+            </div>
+          </article>
         </div>
+
+        <div class="content-grid four reveal delay-2">
+          <article class="panel compact"><span class="mini-label">Safety</span><h3>Positive Externality</h3><p>Accident reduction creates public benefits markets may underprice.</p></article>
+          <article class="panel compact"><span class="mini-label">Congestion</span><h3>Negative Externality</h3><p>Cheaper trips can increase vehicle miles traveled.</p></article>
+          <article class="panel compact"><span class="mini-label">Liability</span><h3>Legal Reallocation</h3><p>Responsibility can shift from human drivers to manufacturers and software systems.</p></article>
+          <article class="panel compact"><span class="mini-label">Antitrust</span><h3>Platform Oversight</h3><p>Data concentration may require scrutiny of mobility operating systems.</p></article>
+        </div>
+
+        <article class="panel reveal delay-3">
+          <div class="reg-grid">
+            <div><span>Federal</span><strong>Safety standards, recalls, interstate freight</strong></div>
+            <div><span>State</span><strong>Licensing, liability, insurance law</strong></div>
+            <div><span>City</span><strong>Permits, curb space, congestion pricing</strong></div>
+            <div><span>Market</span><strong>Disclosure, privacy, data portability</strong></div>
+          </div>
+        </article>
       </section>
 
-      <!-- 8. Equilibrium Models -->
-      <section class="page-section" id="equilibrium">
-        <header class="section-header fade-up">
+      <section class="page-section" id="equilibrium" data-page="Equilibrium Models">
+        <header class="page-header reveal">
           <span class="eyebrow">Section 08</span>
           <h2>Equilibrium Models</h2>
+          <p>The climax: equilibrium arrives when falling costs, adequate trust, regulatory permission, and platform scale meet in the same market.</p>
         </header>
-        <div class="card featured-card fade-up dynamic-glow">
-          <div class="card-header">
-            <h4>General Equilibrium Synthesis</h4>
+
+        <article class="panel model-stage reveal delay-1">
+          <div class="panel-header">
+            <div><span class="mini-label">Long-Run Model</span><h3>Autonomous mobility equilibrium</h3></div>
+            <span class="panel-badge">Scenario Engine</span>
           </div>
-          <p class="card-desc mb-md">A theoretical multi-market construct showing the end-state supply/demand intersection.</p>
-          <div class="css-placeholder-graph massive-3d">
-            <div class="grid-plane"></div>
-            <div class="intersect-point"></div>
+          <div class="model-grid">
+            <div class="model-visual" aria-hidden="true">
+              <div class="plane"></div>
+              <div class="equilibrium-point"></div>
+              <div class="model-line line-a"></div>
+              <div class="model-line line-b"></div>
+              <span class="model-tag tag-a">Supply shifts right</span>
+              <span class="model-tag tag-b">Trust shifts demand</span>
+              <span class="model-tag tag-c">Platform equilibrium</span>
+            </div>
+            <div class="chart-wrap model-chart interactive-chart" data-chart-key="equilibrium"><canvas id="chartEquilibrium"></canvas></div>
           </div>
+        </article>
+
+        <div class="content-grid three reveal delay-2">
+          <article class="panel scenario-card"><span>Slow Trust Case</span><strong>Lower quantity, delayed price decline</strong><p>Safety fears and regulation slow demand despite cost improvements.</p></article>
+          <article class="panel scenario-card is-featured"><span>Base Case</span><strong>Falling price, rising quantity</strong><p>Supply scale and moderate adoption create a stable mainstream market.</p></article>
+          <article class="panel scenario-card"><span>Platform Dominance</span><strong>Fleet networks over ownership</strong><p>Robotaxis and data moats shift value away from individual car purchases.</p></article>
         </div>
       </section>
 
-      <!-- 9. Data Lab -->
-      <section class="page-section" id="data-lab">
-        <header class="section-header fade-up">
+      <section class="page-section dark-page" id="data-lab" data-page="Data Lab">
+        <header class="page-header reveal">
           <span class="eyebrow">Section 09</span>
           <h2>Data Lab</h2>
+          <p>A Bloomberg-lite workspace for the future interactive model: forecasts, labor exposure, funding cycles, policy toggles, and adoption scenarios.</p>
         </header>
-        <div class="dashboard-grid stagger-group">
-          <div class="card controls-card fade-up">
-            <h4>Simulation Parameters</h4>
-            <div class="parameter-group mt-md">
-              <label>Price Elasticity of Demand</label>
-              <div class="fake-slider"><div class="slider-fill" style="width: 40%"></div></div>
+
+        <div class="terminal-dashboard reveal delay-1">
+          <aside class="terminal-sidebar">
+            <span class="mini-label">Explorer</span>
+            <button class="terminal-tab is-active hover-target">Adoption Forecast</button>
+            <button class="terminal-tab hover-target">Labor Exposure</button>
+            <button class="terminal-tab hover-target">Capital Flows</button>
+            <button class="terminal-tab hover-target">Policy Shock</button>
+            <button class="terminal-tab hover-target">Equilibrium Output</button>
+            <div class="control-stack">
+              <label>Year Horizon <span>2035</span></label>
+              <div class="fake-slider"><span style="width: 72%"></span></div>
+              <label>Trust Index <span>42%</span></label>
+              <div class="fake-slider"><span style="width: 42%"></span></div>
+              <label>Cost Decline <span>58%</span></label>
+              <div class="fake-slider"><span style="width: 58%"></span></div>
             </div>
-            <div class="parameter-group">
-              <label>Subsidization Rate</label>
-              <div class="fake-slider"><div class="slider-fill" style="width: 15%"></div></div>
+          </aside>
+
+          <section class="terminal-main">
+            <div class="terminal-metrics">
+              <article><span>AV Units 2030</span><strong>125.7K</strong><small>Scenario baseline</small></article>
+              <article><span>GDP Impact</span><strong>$214B</strong><small>High adoption case</small></article>
+              <article><span>Trust Gap</span><strong>29 pts</strong><small>Willing vs afraid</small></article>
+              <article><span>Labor Shock</span><strong>2.7M</strong><small>Exposed roles</small></article>
             </div>
-            <div class="parameter-group">
-              <label>Tech Depreciation</label>
-              <div class="fake-slider"><div class="slider-fill" style="width: 60%"></div></div>
+            <div class="terminal-grid">
+              <article class="terminal-panel wide liquid-glass interactive-chart" data-chart-key="dataLab"><div class="panel-header"><div><span class="mini-label">Live Model Placeholder</span><h3>Forecast explorer</h3></div><span class="panel-badge">Click for detail</span></div><div class="chart-wrap"><canvas id="chartDataLab"></canvas></div></article>
+              <article class="terminal-panel"><span class="mini-label">Filters</span><div class="toggle-row"><span class="is-on">U.S.</span><span>China</span><span>EU</span></div><div class="toggle-row"><span class="is-on">Urban</span><span>Freight</span><span>Private</span></div></article>
+              <article class="terminal-panel"><span class="mini-label">Signals</span><ul class="terminal-list"><li>Cost curve: falling</li><li>Trust index: lagging</li><li>Regulation: fragmented</li><li>Capital: returning</li></ul></article>
             </div>
-          </div>
-          <div class="card output-card fade-up delay-1">
-             <h4>Live Model Output</h4>
-             <div class="css-placeholder-graph scanning-grid">
-                <div class="scan-line"></div>
-                <div class="data-wave"></div>
-             </div>
-          </div>
+          </section>
         </div>
       </section>
 
-      <!-- 10. Sources -->
-      <section class="page-section" id="sources">
-         <header class="section-header fade-up">
+      <section class="page-section" id="sources" data-page="Sources">
+        <header class="page-header reveal">
           <span class="eyebrow">Section 10</span>
           <h2>Sources & Methodology</h2>
+          <p>The research base combines industry forecasts, consumer surveys, labor statistics, investment reporting, and economic theory.</p>
         </header>
-        <div class="card fade-up bibliography">
-           <ul class="source-list">
-             <li class="placeholder-text">McKinsey & Company. (2024). <em>Autonomous driving's future: Resolving the technology paradox</em>.</li>
-             <li class="placeholder-text">Bureau of Labor Statistics. (2025). <em>Projections of occupation shifts in the transport sector</em>.</li>
-             <li class="placeholder-text">Krugman, P. & Wells, R. (2023). <em>Microeconomics</em>. Academic Press.</li>
-           </ul>
+
+        <div class="content-grid two reveal delay-1">
+          <article class="panel chart-panel liquid-glass interactive-chart" data-chart-key="sources"><div class="panel-header"><div><span class="mini-label">Source Mix</span><h3>Evidence categories</h3></div><span class="panel-badge">Click for detail</span></div><div class="chart-wrap"><canvas id="chartSources"></canvas></div></article>
+          <article class="panel"><span class="mini-label">Methodology</span><h3>Evidence becomes model inputs.</h3><p>Forecasts inform supply and adoption curves. Surveys inform demand and trust parameters. BLS data anchors labor exposure. Funding and valuation data explain speculative investment behavior.</p></article>
+        </div>
+
+        <div class="source-grid reveal delay-2">
+          <article class="source-card liquid-glass"><span>Market Forecasts</span><strong>Grand View Research, Market.us, Statista summaries</strong><p>Market size, unit forecasts, CAGR, and regional deployment signals.</p><a class="source-link hover-target" href="https://www.grandviewresearch.com/industry-analysis/autonomous-vehicles-market" target="_blank" rel="noopener noreferrer">Grand View report</a><a class="source-link hover-target" href="https://www.news.market.us/autonomous-vehicles-statistics/" target="_blank" rel="noopener noreferrer">Market.us statistics</a></article>
+          <article class="source-card liquid-glass"><span>Industry Strategy</span><strong>McKinsey Future Mobility</strong><p>Robotaxi timelines, trucking scenarios, L2+ adoption, and deployment constraints.</p><a class="source-link hover-target" href="https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/future-of-autonomous-vehicles-industry" target="_blank" rel="noopener noreferrer">McKinsey AV industry</a><a class="source-link hover-target" href="https://www.mckinsey.com/industries/automotive-and-assembly/our-insights/autonomous-drivings-future-convenient-and-connected" target="_blank" rel="noopener noreferrer">McKinsey consumer adoption</a></article>
+          <article class="source-card liquid-glass"><span>Consumer Surveys</span><strong>AAA, Pew Research Center</strong><p>Fear, willingness to ride, safety perception, and adoption barriers.</p><a class="source-link hover-target" href="https://newsroom.aaa.com/2024/03/aaa-fear-of-self-driving-cars-persists-as-industry-faces-an-uncertain-future/" target="_blank" rel="noopener noreferrer">AAA fear survey</a><a class="source-link hover-target" href="https://www.pewresearch.org/internet/2022/03/17/americans-cautious-about-the-deployment-of-driverless-cars/" target="_blank" rel="noopener noreferrer">Pew driverless cars</a></article>
+          <article class="source-card liquid-glass"><span>Labor Data</span><strong>Bureau of Labor Statistics</strong><p>Heavy truckers, taxi drivers, chauffeurs, wages, and occupational exposure.</p><a class="source-link hover-target" href="https://www.bls.gov/ooh/transportation-and-material-moving/heavy-and-tractor-trailer-truck-drivers.htm" target="_blank" rel="noopener noreferrer">BLS truck drivers</a><a class="source-link hover-target" href="https://www.bls.gov/ooh/transportation-and-material-moving/taxi-drivers-and-chauffeurs.htm" target="_blank" rel="noopener noreferrer">BLS taxi/chauffeurs</a></article>
+          <article class="source-card liquid-glass"><span>Investment Data</span><strong>Crunchbase, company market caps, Waymo reporting</strong><p>Startup funding cycles, valuation premiums, and bubble-risk framing.</p><a class="source-link hover-target" href="https://news.crunchbase.com/transportation/autonomous-driving-startup-funding-wayve-cruise/" target="_blank" rel="noopener noreferrer">Crunchbase funding</a><a class="source-link hover-target" href="https://waymo.com/blog/2026/02/waymo-raises-usd16-billion-investment-round/" target="_blank" rel="noopener noreferrer">Waymo funding</a></article>
+          <article class="source-card liquid-glass"><span>Economic Theory</span><strong>Micro and macro frameworks</strong><p>Supply-demand shifts, externalities, surplus, oligopoly, and general equilibrium.</p><a class="source-link hover-target" href="https://www.economicsobservatory.com/what-might-be-the-economic-implications-of-autonomous-vehicles" target="_blank" rel="noopener noreferrer">Economics Observatory</a><a class="source-link hover-target" href="https://www.thedriverlessdigest.com/p/15-charts-that-explain-the-autonomous" target="_blank" rel="noopener noreferrer">Driverless Digest charts</a></article>
         </div>
       </section>
 
-      <!-- 11. Conclusion -->
-      <section class="page-section" id="conclusion">
-        <div class="hero conclusion-hero fade-up">
-           <span class="hero-eyebrow">Synthesis</span>
-           <h2 class="hero-title">A Transformative<br/>Equilibrium</h2>
-           <p class="hero-description placeholder-text mt-md text-lg">
-             The autonomous vehicle presents an unprecedented economic puzzle: it is simultaneously a consumer durable, a capital asset, and an infrastructural node.
-           </p>
-           <div class="hero-actions mt-xl">
-              <button class="btn-secondary" onclick="document.querySelector('[data-route=\'home\']').click()">Return to Start</button>
-           </div>
+      <section class="page-section" id="conclusion" data-page="Conclusion">
+        <div class="closing-hero reveal">
+          <span class="eyebrow">Final Synthesis</span>
+          <h2>Autonomous vehicles are not only better cars. They are a new market architecture.</h2>
+          <p>The evidence points to a transition from premium feature to infrastructure layer: cost declines shift supply, trust determines demand, platforms concentrate market power, labor adjusts unevenly, and policy decides how much of the social gain becomes public benefit.</p>
         </div>
-      </section>
 
+        <div class="content-grid three reveal delay-1">
+          <article class="panel synthesis-card"><span>Micro</span><strong>Price falls, quantity rises</strong><p>Technology shifts supply outward while trust and safety evidence pull demand toward mass adoption.</p></article>
+          <article class="panel synthesis-card"><span>Macro</span><strong>Productivity rises, labor shifts</strong><p>GDP gains are possible, but displaced driving labor needs transition pathways.</p></article>
+          <article class="panel synthesis-card"><span>Market Power</span><strong>Platforms dominate</strong><p>Data, fleet scale, and regulatory access create a high-concentration future.</p></article>
+        </div>
+
+        <article class="panel final-panel reveal delay-2">
+          <span class="mini-label">Closing Argument</span>
+          <h3>The equilibrium is not just a price and quantity point. It is a social bargain between innovation, trust, labor adjustment, and platform governance.</h3>
+          <button class="btn-primary hover-target" data-jump="home">Return to Opening</button>
+        </article>
+      </section>
     </main>
   </div>
-  <script src="app.js"></script>
+
+  <script src="app.js?v=20260519e"></script>
 </body>
 </html>
