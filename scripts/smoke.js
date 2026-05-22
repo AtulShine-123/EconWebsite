@@ -7,30 +7,35 @@ const styles = fs.readFileSync(path.join(root, "styles.css"), "utf8");
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
 
 const routes = [
-  "home",
-  "research-question",
-  "market-structure",
-  "consumer-adoption",
-  "labor-macro",
-  "investment",
-  "policy",
-  "equilibrium",
-  "data-lab",
-  "sources",
-  "conclusion"
+  "overview",
+  "macro-model",
+  "evidence-local",
+  "policy-tradeoffs",
+  "rubric-sources"
 ];
 
 const charts = [
-  "chartHomeAdoption",
-  "chartConcentration",
+  "chartMarket",
+  "chartADAS",
   "chartTrust",
   "chartLabor",
-  "chartGDP",
-  "chartInvestment",
-  "chartPolicy",
-  "chartEquilibrium",
-  "chartDataLab",
-  "chartSources"
+  "chartSurvey",
+  "chartPolicy"
+];
+
+const requiredIndexTokens = [
+  "requirement-tracker",
+  "Created Element",
+  "Rubric + Sources",
+  "AD-AS",
+  "Plain English",
+  "AP Macro Terms",
+  "survey-module",
+  "bibliography",
+  "Self-Created Rubric",
+  "California DMV",
+  "Grand View Research",
+  "transition-wipe"
 ];
 
 const failures = [];
@@ -44,15 +49,22 @@ for (const chart of charts) {
   if (!index.includes(`id="${chart}"`)) failures.push(`Missing chart canvas: ${chart}`);
 }
 
-for (const token of ["transition-wipe", "network-canvas", "terminal-dashboard", "model-stage", "context-dock", "detail-drawer", "source-link"]) {
-  if (!index.includes(token)) failures.push(`Missing UI shell token: ${token}`);
+for (const token of requiredIndexTokens) {
+  if (token === "transition-wipe") {
+    if (index.includes(token) || styles.includes(token) || app.includes(token)) {
+      failures.push("Old transition-wipe token should be removed");
+    }
+    continue;
+  }
+
+  if (!index.includes(token)) failures.push(`Missing required content token: ${token}`);
 }
 
-for (const cssToken of ["--blue", ".page-section.is-active", ".terminal-dashboard", ".model-stage", ".liquid-glass", ".detail-drawer"]) {
+for (const cssToken of [".page-section.is-active", "@keyframes pageFadeIn", ".accordion-panel", ".segmented-control", ".rubric-table", ".survey-panel"]) {
   if (!styles.includes(cssToken)) failures.push(`Missing CSS token: ${cssToken}`);
 }
 
-for (const jsToken of ["function navigate", "function initCharts", "new Chart", "initCanvasNetwork", "chartDetails", "pageMeaning"]) {
+for (const jsToken of ["function navigate", "function initCharts", "new Chart", "initSurveyChart", "initExplanationToggles", "pageMeaning"]) {
   if (!app.includes(jsToken)) failures.push(`Missing JS token: ${jsToken}`);
 }
 
@@ -62,4 +74,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Smoke test passed: ${routes.length} routes and ${charts.length} chart slots verified.`);
+console.log(`Smoke test passed: ${routes.length} routes, ${charts.length} chart slots, AP Macro requirements verified.`);
