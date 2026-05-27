@@ -4,7 +4,7 @@ const state = {
   charts: {},
   mouse: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
   ring: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
-  survey: { yes: 0, maybe: 0, no: 0 }
+  survey: { yes: 17, maybe: 10, no: 11 }
 };
 
 const navItems = Array.from(document.querySelectorAll(".nav-item"));
@@ -592,16 +592,7 @@ function initCharts(route) {
 }
 
 function loadSurvey() {
-  try {
-    const saved = JSON.parse(window.localStorage.getItem("av-econ-survey") || "{}");
-    state.survey = {
-      yes: Number(saved.yes) || 0,
-      maybe: Number(saved.maybe) || 0,
-      no: Number(saved.no) || 0
-    };
-  } catch {
-    state.survey = { yes: 0, maybe: 0, no: 0 };
-  }
+  state.survey = { yes: 17, maybe: 10, no: 11 };
 }
 
 function saveSurvey() {
