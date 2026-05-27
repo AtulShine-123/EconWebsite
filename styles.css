@@ -899,8 +899,19 @@ ul {
 
 .bibliography {
   display: grid;
-  gap: 9px;
+  gap: 12px;
   margin-top: 14px;
+}
+
+.bibliography .source-link {
+  display: block;
+  width: 100%;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.6;
+  padding: 12px 18px 12px 32px;
+  text-indent: -16px;
 }
 
 .source-link,
